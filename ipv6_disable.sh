@@ -16,7 +16,7 @@ SYSCTL_IPV6="net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv
 #
 file_size () {
         [ -z "$1" ] && printf "file_size: No argument given!\n" && return 1
-        stat --printf="%i" "$1"
+        stat --printf="%s" "$1"
         return 0
 }
 
@@ -36,11 +36,11 @@ comment () {
 printf " @ Disable IPv6 using sysctl.\n"
 SYSCTL_FULL_PATH="$SYSCTL_PATH/$SYSCTL_FILE"
 if [ ! -f "$SYSCTL_FULL_PATH" ]; then
-        cat "$SYSCTL_IPV6" > "$SYSCTL_FULL_PATH"
+        printf "$SYSCTL_IPV6" > "$SYSCTL_FULL_PATH"
 else
         SYSCTL_FSIZE=$(file_size "$SYSCTL_FULL_PATH")
         [ $? -eq 1 ] && pritnf "Failed to detremine file size!\n" && exit 1
-        [ $SYSCTL_FSIZE -lt 100 ] && cat "$SYSCTL_IPV6" > "$SYSCTL_FULL_PATH"
+        [ $SYSCTL_FSIZE -lt 100 ] && printf "$SYSCTL_IPV6" > "$SYSCTL_FULL_PATH"
 fi
 
 # make /etc/hosts proper
